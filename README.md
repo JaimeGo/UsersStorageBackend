@@ -1,2 +1,2 @@
 # UsersStorageFrontend
-Collection of users accessed made in Rails 5
+Collection of users made in Rails 5
