@@ -3,6 +3,8 @@ module Api
     class UsersController < ApplicationController
 
       before_action :set_user, only: [:show, :update, :destroy]
+
+      # We check if the user selected an avatar or not
       before_action :check_avatar_nil, only: [:create, :update]
 
 
@@ -14,10 +16,12 @@ module Api
 
         @user=User.new(user_params)
 
+        # If avatar was selected, we attach it to user
         if not @avatar_is_nil
 
           @user.avatar.attach(params[:avatar])
 
+        # If avatar was not selected, we add anonymous avatar
         else
           anon_avatar_path=File.join(Rails.root, 'public', 'anon.png' )
           @user.avatar.attach(io: File.open(anon_avatar_path), filename: 'anon.png', content_type: 'image/png')
@@ -25,11 +29,7 @@ module Api
 
         if @user.save
 
-
-
-          avatar_data={:avatar_location => url_for(@user.avatar)}
-
-          render json: @user.attributes.merge(avatar_data), status: :created
+          render json: @user, status: :created
 
         else
 
@@ -71,6 +71,7 @@ module Api
       def index
         @users=User.all
 
+        # We send avatar url for src attribute of <img> element
         users_with_avatar = @users.map do |user|
 
           avatar_data={:avatar_location => url_for(user.avatar)}
@@ -84,6 +85,7 @@ module Api
 
       def show
 
+        # We send avatar url for src attribute of <img> element
         avatar_data={:avatar_location => url_for(@user.avatar)}
         render json: @user.attributes.merge(avatar_data)
 
