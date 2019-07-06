@@ -3,18 +3,29 @@ module Api
     class UsersController < ApplicationController
 
       before_action :set_user, only: [:show, :update, :destroy]
+      before_action :check_avatar_nil, only: [:create, :update]
+
 
       def new
         @user=User.new
       end
 
       def create
+
         @user=User.new(user_params)
+
+        if not @avatar_is_nil
+
+          @user.avatar.attach(params[:avatar])
+
+        else
+          anon_avatar_path=File.join(Rails.root, 'public', 'anon.png' )
+          @user.avatar.attach(io: File.open(anon_avatar_path), filename: 'anon.png', content_type: 'image/png')
+        end
 
         if @user.save
 
-          # We could send the base 64 representation of the data, but url is enough
-          #@base64=Base64.strict_encode64(@user.avatar.download)
+
 
           avatar_data={:avatar_location => url_for(@user.avatar)}
 
@@ -29,6 +40,16 @@ module Api
 
       def update
         if @user.update(user_params)
+
+          if not @avatar_is_nil
+
+            @user.avatar.attach(params[:avatar])
+
+          else
+            anon_avatar_path=File.join(Rails.root, 'public', 'anon.png' )
+            @user.avatar.attach(io: File.open(anon_avatar_path), filename: 'anon.png')
+
+          end
 
           render json: @user
 
@@ -75,7 +96,11 @@ module Api
       end
 
       def user_params
-        params.permit(:name, :last_name, :rut, :avatar)
+        params.permit(:name, :last_name, :rut)
+      end
+
+      def check_avatar_nil
+        @avatar_is_nil=params[:avatar]=="null"
       end
     end
 
