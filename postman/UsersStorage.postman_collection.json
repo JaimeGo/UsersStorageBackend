@@ -1,0 +1,142 @@
+{
+	"info": {
+		"_postman_id": "a79f79fc-7411-4466-9e08-b7509b5687fe",
+		"name": "UsersStorage",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get all users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7c2965c0-9046-43bf-a6b0-03836c82a3b9",
+						"exec": [
+							"let body=pm.response.json();",
+							"pm.environment.set(\"user_id\", body.id)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "{{name}}",
+							"type": "text"
+						},
+						{
+							"key": "last_name",
+							"value": "{{last_name}}",
+							"type": "text"
+						},
+						{
+							"key": "rut",
+							"value": "{{rut}}",
+							"type": "text"
+						},
+						{
+							"key": "avatar",
+							"value": "{{avatar}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}",
+					"host": [
+						"{{url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/{{user_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "{{name}}",
+							"type": "text"
+						},
+						{
+							"key": "last_name",
+							"value": "{{last_name}}",
+							"type": "text"
+						},
+						{
+							"key": "rut",
+							"value": "{{rut}}",
+							"type": "text"
+						},
+						{
+							"key": "avatar",
+							"type": "file",
+							"src": "/Users/jaime/Downloads/avatar_test.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/{{user_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Destroy user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		}
+	]
+}
