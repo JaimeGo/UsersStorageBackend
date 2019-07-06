@@ -5,7 +5,7 @@ module Api
       before_action :set_user, only: [:show, :update, :destroy]
 
       # We check if the user selected an avatar or not
-      before_action :check_avatar_nil, only: [:create, :update]
+      before_action :check_avatar_selected, only: [:create, :update]
 
 
       def new
@@ -17,7 +17,7 @@ module Api
         @user=User.new(user_params)
 
         # If avatar was selected, we attach it to user
-        if not @avatar_is_nil
+        if @avatar_selected
 
           @user.avatar.attach(params[:avatar])
 
@@ -41,13 +41,9 @@ module Api
       def update
         if @user.update(user_params)
 
-          if not @avatar_is_nil
+          if @avatar_selected
 
             @user.avatar.attach(params[:avatar])
-
-          else
-            anon_avatar_path=File.join(Rails.root, 'public', 'anon.png' )
-            @user.avatar.attach(io: File.open(anon_avatar_path), filename: 'anon.png')
 
           end
 
@@ -101,9 +97,10 @@ module Api
         params.permit(:name, :last_name, :rut)
       end
 
-      def check_avatar_nil
-        @avatar_is_nil=params[:avatar]=="null"
+      def check_avatar_selected
+        @avatar_selected=params[:avatar]!="null"
       end
+
     end
 
   end
